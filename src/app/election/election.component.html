@@ -13,16 +13,19 @@
                         <mat-tab-group dynamicHeight="true" stacked="true">
                             <mat-tab label="Candidates">
 
-                                <div *ngFor="let position of positions; last as isLast ">
-                                    <p>{{position.name}} </p>
-                                    <div class="tab" fxLayout.gt-sm="row wrap" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="15px">
-                                        <mat-card class="candidate-card" *ngFor="let candidate of position.candidates.data" fxFlex.gt-sm="30">
-                                            {{ candidate.student_profile.first_name }} {{ candidate.student_profile.middle_name }} {{ candidate.student_profile.last_name
-                                            }}
-                                        </mat-card>
+                                <div class="tab">
+                                    <div *ngFor="let position of positions; last as isLast ">
+                                        <p>{{position.name}} </p>
+                                        <div fxLayout.gt-sm="row wrap" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="15px">
+                                            <mat-card class="candidate-card" *ngFor="let candidate of position.candidates.data" fxFlex.gt-sm="30">
+                                                {{ candidate.student_profile.first_name }} {{ candidate.student_profile.middle_name }} {{ candidate.student_profile.last_name
+                                                }}
+                                            </mat-card>
+                                        </div>
+                                        <mat-divider *ngIf="!isLast"></mat-divider>
                                     </div>
-                                    <mat-divider *ngIf="!isLast"></mat-divider>
                                 </div>
+
 
 
 
@@ -32,7 +35,7 @@
                                     <mat-horizontal-stepper linear="true">
                                         <mat-step label="Select Candidates" editable="true" [completed]="selectedCandidates.length != 0">
                                             <div class="selection-list">
-                                                <mat-selection-list #candidates (selectionChange)="onSelectCandidate(candidates,$event,position)" *ngFor="let position of positions; last as isLast ">
+                                                <mat-selection-list #candidates (selectionChange)="onSelectCandidate($event,position)" *ngFor="let position of positions; last as isLast ">
                                                     <p>{{position.name}} (Choose {{position.number_of_winners}}) </p>
                                                     <mat-list-option [value]="candidate" *ngFor="let candidate of position.candidates.data">
                                                         <span>
@@ -71,7 +74,7 @@
 
                                             </mat-list>
                                             <button mat-button matStepperPrevious>Back</button>
-                                            <button mat-raised-button color="primary">Confirm Vote</button>
+                                            <button mat-raised-button (click)="confirmVote()" color="primary">Confirm Vote</button>
                                         </mat-step>
                                     </mat-horizontal-stepper>
                                 </div>

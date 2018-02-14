@@ -50,7 +50,7 @@ export class ElectionComponent implements OnInit {
   }
 
 
-  onSelectCandidate(obj: MatSelectionList, event: MatSelectionListChange, position) {
+  onSelectCandidate(event: MatSelectionListChange, position) {
     // console.log(obj);
     // console.log(event);
 
@@ -76,18 +76,40 @@ export class ElectionComponent implements OnInit {
         this.selectedCandidates.push(selectedCandidate);
       } else {
         event.option.selected = false;
-        this.snackBar.open(`Max number of candidates in the selected position is ${getPositionMaxLength}`, 'Okay', {
+        this.snackBar.open(`Max number of candidates for ${position.name} is ${getPositionMaxLength}`, 'Okay', {
           duration: 5000
         });
       }
 
     } else {
-      // check if deselect
-      this.selectedCandidates.splice(findCandidate, 1);
+      // remove candidate by filtering
+      const removeByFilter = this.selectedCandidates.filter((candidates) => candidates.id != selectedCandidate.id);
+      this.selectedCandidates = removeByFilter;
+
     }
+
+    // sort candidates by rank
+    this.selectedCandidates.sort((a, b) => {
+      if (a.position.rank > b.position.rank) {
+        return 1;
+      }
+      if (a.position.rank < b.position.rank) {
+        return -1;
+      }
+      return 0;
+    });
 
     console.log(this.selectedCandidates);
 
+
+
+  }
+
+  confirmVote() {
+    const user = this.authService.getProfile();
+    const candidateIds = this.selectedCandidates.map(candidate => candidate.id);
+    console.log(user);
+    console.log(candidateIds);
 
 
   }
