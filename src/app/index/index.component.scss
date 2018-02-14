@@ -1,0 +1,35 @@
+@import "~@angular/material/theming";
+mat-toolbar{
+    @include mat-elevation(2);
+    padding-left: 25px;
+    padding-right: 25px;
+
+    & > [mat-mini-fab]{
+        @include mat-elevation(0);
+    }
+}
+
+mat-sidenav-container{
+    height: 100vh;
+}
+
+mat-sidenav{
+    width: 250px;
+}
+
+.mat-dialog-actions .mat-button+.mat-button, .mat-dialog-actions .mat-button+.mat-raised-button, .mat-dialog-actions .mat-raised-button+.mat-button, .mat-dialog-actions .mat-raised-button+.mat-raised-button{
+    margin-left:0 !important ;
+}
+
+.toolbar-spacer {
+    /* This fills the remaining space, by using flexbox. 
+       Every toolbar row uses a flexbox row layout. */
+    flex: 1 1 auto;
+  }
+
+.container{
+    padding-top: 50px;
+    padding-left: 35px;
+    padding-right: 35px;
+    margin-bottom: 100px;
+}

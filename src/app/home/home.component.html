@@ -1,0 +1,9 @@
+<div class="layout" fxLayout="column" fxLayoutAlign="space-around" fxLayoutGap="125px">
+
+
+  <app-open-election (selectElection)="viewElection($event)" label="Hi, here are elections that require your participation. Please take a look."></app-open-election>
+
+
+  <app-published-election (selectElection)="viewElection($event)" label="Hi, here are elections that are finished and published. Please take a look and see the results!"></app-published-election>
+
+</div>

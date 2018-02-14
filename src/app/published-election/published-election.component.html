@@ -1,0 +1,17 @@
+<div fxLayout="row" fxLayoutAlign="center" f>
+  <div class="layout" fxLayout="column" fxFlex="50" fxLayoutAlign="center" fxLayoutGap="45px">
+
+    <p>
+      {{label}}
+    </p>
+
+    <div fxLayout="column" fxLayoutAlign="space-around" fxLayoutGap="15px">
+
+      <mat-card (click)="onSelect(election)" *ngFor="let election of elections">
+        {{election.description}}
+      </mat-card>
+
+    </div>
+
+  </div>
+</div>

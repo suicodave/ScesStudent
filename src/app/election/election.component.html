@@ -1,0 +1,87 @@
+<div fxLayout="row" fxLayoutAlign="center" f>
+    <div class="layout" fxLayout="column" fxFlex="80" fxFlex.lt-md="95" fxLayoutAlign="center" fxLayoutGap="45px">
+
+        <div fxLayout="column" fxLayoutAlign="space-around" fxLayoutGap="15px">
+
+            <mat-card>
+                <mat-card-header>
+                    {{election?.description}}
+                </mat-card-header>
+
+                <mat-card-content>
+                    <div class="election-card-content">
+                        <mat-tab-group dynamicHeight="true" stacked="true">
+                            <mat-tab label="Candidates">
+
+                                <div *ngFor="let position of positions; last as isLast ">
+                                    <p>{{position.name}} </p>
+                                    <div class="tab" fxLayout.gt-sm="row wrap" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="15px">
+                                        <mat-card class="candidate-card" *ngFor="let candidate of position.candidates.data" fxFlex.gt-sm="30">
+                                            {{ candidate.student_profile.first_name }} {{ candidate.student_profile.middle_name }} {{ candidate.student_profile.last_name
+                                            }}
+                                        </mat-card>
+                                    </div>
+                                    <mat-divider *ngIf="!isLast"></mat-divider>
+                                </div>
+
+
+
+                            </mat-tab>
+                            <mat-tab label="Vote" *ngIf="election?.is_active">
+                                <div class="tab">
+                                    <mat-horizontal-stepper linear="true">
+                                        <mat-step label="Select Candidates" editable="true">
+                                            <div class="selection-list">
+                                                <mat-selection-list #candidates (selectionChange)="onSelectCandidate(candidates,$event,position)" *ngFor="let position of positions; last as isLast ">
+                                                    <p>{{position.name}} (Choose {{position.number_of_winners}}) </p>
+                                                    <mat-list-option [value]="candidate" *ngFor="let candidate of position.candidates.data">
+                                                        {{ candidate.student_profile.first_name }} {{ candidate.student_profile.middle_name }} {{ candidate.student_profile.last_name
+                                                        }}
+                                                    </mat-list-option>
+                                                    <mat-divider *ngIf="!isLast"></mat-divider>
+                                                </mat-selection-list>
+                                            </div>
+
+
+                                            <button mat-raised-button color="primary" matStepperNext>Checkout Votes</button>
+                                        </mat-step>
+                                        <mat-step label="Review Choices">
+                                            <p>
+                                                My Selected Candidates
+                                            </p>
+
+
+
+                                            <mat-list class="selection-list">
+                                                <mat-list-item *ngFor="let candidate of selectedCandidates">
+                                                    {{candidate.student_profile.first_name}} {{candidate.student_profile.middle_name}} {{candidate.student_profile.last_name}}
+                                                    - {{candidate.position.name}}
+                                                </mat-list-item>
+
+                                            </mat-list>
+                                            <button mat-button matStepperPrevious>Back</button>
+                                            <button mat-raised-button color="primary">Confirm Vote</button>
+                                        </mat-step>
+                                    </mat-horizontal-stepper>
+                                </div>
+
+                            </mat-tab>
+                            <mat-tab label="Review">
+                                <div class="tab">
+
+                                </div>
+                            </mat-tab>
+                            <mat-tab label="Standing">
+                                <div class="tab"></div>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </div>
+
+                </mat-card-content>
+
+            </mat-card>
+
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,31 @@
+this.pusher = new Pusher('4051662bb310056f8c60', {
+      cluster: 'eu',
+      encrypted: true
+    });
+
+
+    const channel = this.pusher.subscribe('test-channel');
+    this.elections.push({
+      description: 'asd'
+    });
+    const indexComponent = this;
+    channel.bind('App\\Events\\ElectionStartedEvent', (data) => {
+
+      this.addedElection = data.election;
+      console.log(this.addedElection);
+
+      const checkIfExist = this.elections.findIndex(election => election.id == this.addedElection.id);
+      if (checkIfExist == -1) {
+        this.elections.push(this.addedElection);
+        this.cd.detectChanges();
+      } else {
+        console.log('already exist');
+
+      }
+      console.log(checkIfExist);
+
+
+      console.log(this.elections);
+
+    });
+    console.log(this.elections);
