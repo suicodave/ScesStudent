@@ -30,13 +30,20 @@
                             <mat-tab label="Vote" *ngIf="election?.is_active">
                                 <div class="tab">
                                     <mat-horizontal-stepper linear="true">
-                                        <mat-step label="Select Candidates" editable="true">
+                                        <mat-step label="Select Candidates" editable="true" [completed]="selectedCandidates.length != 0">
                                             <div class="selection-list">
                                                 <mat-selection-list #candidates (selectionChange)="onSelectCandidate(candidates,$event,position)" *ngFor="let position of positions; last as isLast ">
                                                     <p>{{position.name}} (Choose {{position.number_of_winners}}) </p>
                                                     <mat-list-option [value]="candidate" *ngFor="let candidate of position.candidates.data">
-                                                        {{ candidate.student_profile.first_name }} {{ candidate.student_profile.middle_name }} {{ candidate.student_profile.last_name
-                                                        }}
+                                                        <span>
+                                                            {{ candidate.student_profile.first_name }} {{ candidate.student_profile.middle_name }} {{ candidate.student_profile.last_name
+                                                            }}
+                                                        </span>
+                                                        <span matLine>
+                                                            {{candidate.partylist.name}}
+                                                        </span>
+
+
                                                     </mat-list-option>
                                                     <mat-divider *ngIf="!isLast"></mat-divider>
                                                 </mat-selection-list>
@@ -54,8 +61,12 @@
 
                                             <mat-list class="selection-list">
                                                 <mat-list-item *ngFor="let candidate of selectedCandidates">
-                                                    {{candidate.student_profile.first_name}} {{candidate.student_profile.middle_name}} {{candidate.student_profile.last_name}}
-                                                    - {{candidate.position.name}}
+                                                    <span>
+
+                                                        {{candidate.student_profile.first_name}} {{candidate.student_profile.middle_name}} {{candidate.student_profile.last_name}}
+                                                        - {{candidate.position.name}}
+                                                    </span>
+
                                                 </mat-list-item>
 
                                             </mat-list>
