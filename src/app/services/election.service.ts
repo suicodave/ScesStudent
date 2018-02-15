@@ -46,6 +46,27 @@ export class ElectionService {
     });
   }
 
+  vote(electionId, studentId, candidateId: Array<any>) {
+    const body = {
+      'election_id': electionId,
+      'student_id': studentId,
+      'candidate_id': candidateId
+    };
+
+    return this.http.post(apiUrl + `elections/vote`, body, {
+      headers: apiHeaders.append('Authorization', `Bearer ${this.authService.checkToken()}`)
+    });
+  }
+
+  myVotes(electionId, studentId) {
+
+    return this.http.get(apiUrl + `elections/${electionId}/my-votes/${studentId}`, {
+      headers: apiHeaders.append('Authorization', `Bearer ${this.authService.checkToken()}`)
+    });
+  }
+
+
+
 
 
 }

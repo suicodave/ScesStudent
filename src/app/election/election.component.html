@@ -30,7 +30,7 @@
 
 
                             </mat-tab>
-                            <mat-tab label="Vote" *ngIf="election?.is_active">
+                            <mat-tab label="Vote" *ngIf="election?.is_active && myVotedCandidatesMetadata?.amount == 0 ">
                                 <div class="tab">
                                     <mat-horizontal-stepper linear="true">
                                         <mat-step label="Select Candidates" editable="true" [completed]="selectedCandidates.length != 0">
@@ -80,8 +80,23 @@
                                 </div>
 
                             </mat-tab>
-                            <mat-tab label="Review">
+                            <mat-tab label="Review My Votes" >
                                 <div class="tab">
+                                    <p>
+                                        Number of Candidates Voted: {{myVotedCandidatesMetadata?.amount}}
+                                    </p>
+
+                                    <mat-list class="selection-list">
+                                        <mat-list-item *ngFor="let candidate of myVotedCandidates">
+                                            <span>
+
+                                                {{candidate.student_profile.first_name}} {{candidate.student_profile.middle_name}} {{candidate.student_profile.last_name}}
+                                                - {{candidate.position.name}}
+                                            </span>
+
+                                        </mat-list-item>
+
+                                    </mat-list>
 
                                 </div>
                             </mat-tab>

@@ -16,6 +16,8 @@ export class ElectionComponent implements OnInit {
   election;
   positions;
   selectedCandidates = [];
+  myVotedCandidates;
+  myVotedCandidatesMetadata;
   // tslint:disable-next-line:max-line-length
   constructor(private activatedRoute: ActivatedRoute, private snackBar: MatSnackBar, private authService: AuthService, private electionService: ElectionService) { }
 
@@ -33,16 +35,23 @@ export class ElectionComponent implements OnInit {
     const decodeKey = this.authService.checkToken();
     const decrypt = cryptoJS.AES.decrypt(localStorage.getItem('election'), decodeKey);
     const election = JSON.parse(decrypt.toString(cryptoJS.enc.Utf8));
+    const student = this.authService.getProfile();
 
     const getElection = this.electionService.getElection(election.id);
     const getPosition = this.electionService.getPosition(election.id);
+    const myVotes = this.electionService.myVotes(election.id, student.id);
 
-    combineLatest([getElection, getPosition]).subscribe(
+    combineLatest([getElection, getPosition, myVotes]).subscribe(
       (res: any) => {
 
         this.election = res[0].data;
         this.positions = res[1].data;
+        this.myVotedCandidatesMetadata = res[2];
+        this.myVotedCandidates = this.parseCandidates(this.myVotedCandidatesMetadata.data);
+
         console.log(res);
+        console.log(this.myVotedCandidates);
+
 
 
       }
@@ -108,12 +117,40 @@ export class ElectionComponent implements OnInit {
   confirmVote() {
     const user = this.authService.getProfile();
     const candidateIds = this.selectedCandidates.map(candidate => candidate.id);
+    console.log(this.election);
+
     console.log(user);
     console.log(candidateIds);
+    this.electionService.vote(this.election.id, user.id, candidateIds).subscribe(
+      (res: any) => {
+        console.log(res);
+
+      },
+      (err) => {
+        console.log(err);
+
+      }
+    );
 
 
   }
 
+  parseCandidates(data: Array<any>) {
+
+
+    const mappedCandidates = data.map(vote => vote.candidate);
+    const sortedCandidates = mappedCandidates.sort((a, b) => {
+      if (a.position.rank > b.position.rank) {
+        return 1;
+      }
+      if (a.position.rank < b.position.rank) {
+        return -1;
+      }
+      return 0;
+    });
+    return sortedCandidates;
+
+  }
 
 
 }
