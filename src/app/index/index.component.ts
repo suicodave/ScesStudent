@@ -12,7 +12,7 @@ export class IndexComponent implements OnInit {
   pusher;
   elections = [];
   addedElection;
-
+  user;
   navLinks = [
     {
       name: '/home', label: 'Home'
@@ -22,6 +22,8 @@ export class IndexComponent implements OnInit {
   constructor(private cd: ChangeDetectorRef, private authService: AuthService) { }
 
   ngOnInit() {
+    this.user = this.authService.getProfile();
+    console.log(this.user);
 
 
 

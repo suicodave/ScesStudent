@@ -10,12 +10,12 @@
         <mat-icon>menu</mat-icon>
       </button>
       <div class="toolbar-spacer"></div>
-      <button mat-mini-fab [matMenuTriggerFor]="appMenu">D</button>
+      <button mat-mini-fab [matMenuTriggerFor]="appMenu">{{user.first_name[0]}}</button>
     </mat-toolbar>
 
     <mat-menu #appMenu="matMenu">
       <button mat-menu-item>Profile</button>
-      <button mat-menu-item (click)="signOut()" >Sign Out</button>
+      <button mat-menu-item (click)="signOut()">Sign Out</button>
     </mat-menu>
 
     <div class="container">

@@ -11,6 +11,7 @@ export class OpenElectionComponent implements OnInit {
   @Input('label') label;
   @Output('selectElection') selectElection = new EventEmitter();
   elections;
+  isLoaded = false;
   constructor(private authService: AuthService, private electionService: ElectionService) { }
 
   ngOnInit() {
@@ -23,10 +24,14 @@ export class OpenElectionComponent implements OnInit {
   }
 
   getOpenElections() {
+    this.isLoaded = false;
     const user = this.authService.getProfile();
+    console.log(user);
     this.electionService.getOpenElection(user.school_year.id, user.department.id).subscribe(
       (res: any) => {
+
         this.elections = res.data;
+        this.isLoaded = true;
 
       }
     );

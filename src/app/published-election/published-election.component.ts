@@ -12,6 +12,7 @@ export class PublishedElectionComponent implements OnInit {
   @Output('selectElection') selectElection = new EventEmitter();
 
   elections;
+  isLoaded = false;
   constructor(private authService: AuthService, private electionService: ElectionService) { }
 
   ngOnInit() {
@@ -22,10 +23,12 @@ export class PublishedElectionComponent implements OnInit {
   }
 
   getPublishedElections() {
+    this.isLoaded = false;
     const user = this.authService.getProfile();
     this.electionService.getPublishedElection(user.school_year.id, user.department.id).subscribe(
       (res: any) => {
         this.elections = res.data;
+        this.isLoaded = true;
 
       }
     );

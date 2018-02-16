@@ -3,11 +3,14 @@ import { apiHeaders, apiUrl } from '../interfaces/global';
 import { AuthService } from './auth.service';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class ElectionService {
 
   constructor(private authService: AuthService, private http: HttpClient) { }
+
+  source = new Subject();
 
   getCandidates(electionId) {
     return this.http.get(apiUrl + `elections/${electionId}/candidates`, {
@@ -61,6 +64,12 @@ export class ElectionService {
   myVotes(electionId, studentId) {
 
     return this.http.get(apiUrl + `elections/${electionId}/my-votes/${studentId}`, {
+      headers: apiHeaders.append('Authorization', `Bearer ${this.authService.checkToken()}`)
+    });
+  }
+
+  candidateStanding(electionId) {
+    return this.http.get(apiUrl + `elections/${electionId}/standings`, {
       headers: apiHeaders.append('Authorization', `Bearer ${this.authService.checkToken()}`)
     });
   }

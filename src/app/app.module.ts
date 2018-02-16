@@ -18,6 +18,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ElectionComponent } from './election/election.component';
 import { AuthService } from './services/auth.service';
 import { ElectionService } from './services/election.service';
+import { ShowCandidateComponent } from './modals/show-candidate/show-candidate.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { ElectionService } from './services/election.service';
     HomeComponent,
     OpenElectionComponent,
     PublishedElectionComponent,
-    ElectionComponent
+    ElectionComponent,
+    ShowCandidateComponent
   ],
   imports: [
     BrowserModule,
@@ -38,6 +40,9 @@ import { ElectionService } from './services/election.service';
     FlexLayoutModule,
     HttpClientModule,
     ReactiveFormsModule
+  ],
+  entryComponents: [
+    ShowCandidateComponent
   ],
   providers: [AuthService, ElectionService],
   bootstrap: [AppComponent]

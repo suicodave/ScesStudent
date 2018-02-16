@@ -1,11 +1,17 @@
 <div fxLayout="row" fxLayoutAlign="center" f>
     <div class="layout" fxLayout="column" fxFlex="80" fxFlex.lt-md="95" fxLayoutAlign="center" fxLayoutGap="45px">
 
-        <div fxLayout="column" fxLayoutAlign="space-around" fxLayoutGap="15px">
+        <div fxLayout="column" *ngIf="dataIsLoaded" fxLayoutAlign="space-around" fxLayoutGap="15px">
 
             <mat-card>
                 <mat-card-header>
-                    {{election?.description}}
+                    <mat-card-title>
+                        Description: {{election?.description}}
+                    </mat-card-title>
+
+                    <mat-card-subtitle>
+                        School Year: {{election?.school_year.name}}
+                    </mat-card-subtitle>
                 </mat-card-header>
 
                 <mat-card-content>
@@ -14,12 +20,20 @@
                             <mat-tab label="Candidates">
 
                                 <div class="tab">
-                                    <div *ngFor="let position of positions; last as isLast ">
+                                    <div class="candidate-card-wrapper" *ngFor="let position of positions; last as isLast ">
                                         <p>{{position.name}} </p>
                                         <div fxLayout.gt-sm="row wrap" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="15px">
-                                            <mat-card class="candidate-card" *ngFor="let candidate of position.candidates.data" fxFlex.gt-sm="30">
-                                                {{ candidate.student_profile.first_name }} {{ candidate.student_profile.middle_name }} {{ candidate.student_profile.last_name
-                                                }}
+                                            <mat-card class="candidate-card" *ngFor="let candidate of position.candidates.data" (click)="showCandidate(candidate)" fxFlex.gt-sm="30">
+                                                <mat-card-header>
+                                                    <img [src]="candidate.profile_image" mat-card-avatar alt="">
+                                                    <mat-card-title>
+                                                        {{ candidate.student_profile.first_name }} {{ candidate.student_profile.middle_name }} {{ candidate.student_profile.last_name
+                                                        }}
+                                                    </mat-card-title>
+                                                    <mat-card-subtitle *ngIf="election.is_party_enabled">
+                                                        {{candidate.partylist.name}}
+                                                    </mat-card-subtitle>
+                                                </mat-card-header>
                                             </mat-card>
                                         </div>
                                         <mat-divider *ngIf="!isLast"></mat-divider>
@@ -32,7 +46,12 @@
                             </mat-tab>
                             <mat-tab label="Vote" *ngIf="election?.is_active && myVotedCandidatesMetadata?.amount == 0 ">
                                 <div class="tab">
-                                    <mat-horizontal-stepper linear="true">
+                                    <div class="show-loader-when-voting" *ngIf="isVoting" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="15px">
+                                        <mat-spinner diamater="55" strokeWidth="4"></mat-spinner>
+                                        <span>Voting...</span>
+                                    </div>
+
+                                    <mat-horizontal-stepper *ngIf="!isVoting" linear="true">
                                         <mat-step label="Select Candidates" editable="true" [completed]="selectedCandidates.length != 0">
                                             <div class="selection-list">
                                                 <mat-selection-list #candidates (selectionChange)="onSelectCandidate($event,position)" *ngFor="let position of positions; last as isLast ">
@@ -48,8 +67,10 @@
 
 
                                                     </mat-list-option>
+                                                    <br>
                                                     <mat-divider *ngIf="!isLast"></mat-divider>
                                                 </mat-selection-list>
+
                                             </div>
 
 
@@ -80,7 +101,7 @@
                                 </div>
 
                             </mat-tab>
-                            <mat-tab label="Review My Votes" >
+                            <mat-tab label="Review My Votes">
                                 <div class="tab">
                                     <p>
                                         Number of Candidates Voted: {{myVotedCandidatesMetadata?.amount}}
@@ -101,7 +122,25 @@
                                 </div>
                             </mat-tab>
                             <mat-tab label="Standing">
-                                <div class="tab"></div>
+                                <div class="tab">
+                                    <div class="candidate-card-wrapper" *ngFor="let position of candidateStanding">
+                                        <p>{{position.name}} </p>
+                                        <div fxLayout.gt-sm="row wrap" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="15px">
+                                            <mat-card class="candidate-card" *ngFor="let candidate of position.candidates" fxFlex.gt-sm="30">
+                                                <p>
+
+                                                    {{candidate.full_name }}
+                                                </p>
+                                                <p>
+                                                    {{candidate.votes}} Vote(s)
+                                                </p>
+                                            </mat-card>
+                                        </div>
+                                        <mat-divider *ngIf="!isLast"></mat-divider>
+                                    </div>
+
+
+                                </div>
                             </mat-tab>
                         </mat-tab-group>
                     </div>
@@ -110,6 +149,13 @@
 
             </mat-card>
 
+        </div>
+        <div fxLayout="column" *ngIf="!dataIsLoaded" fxLayoutAlign="center center" fxLayoutGap="15px">
+            <mat-spinner diameter="55" strokeWidth="4">
+            </mat-spinner>
+            <span>
+                Loading Data...
+            </span>
         </div>
 
     </div>

@@ -5,7 +5,7 @@
       {{label}}
     </p>
 
-    <div fxLayout="column" fxLayoutAlign="space-around" fxLayoutGap="15px">
+    <div fxLayout="column" *ngIf="isLoaded" fxLayoutAlign="space-around" fxLayoutGap="15px">
 
       <mat-card (click)="onSelect(election)" *ngFor="let election of elections">
         {{election.description}}
@@ -13,5 +13,10 @@
 
     </div>
 
+    <div *ngIf="!isLoaded">
+      Loading...
+    </div>
+
   </div>
+
 </div>

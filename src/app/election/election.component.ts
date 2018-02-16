@@ -4,7 +4,8 @@ import { AuthService } from '../services/auth.service';
 import { ElectionService } from '../services/election.service';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import * as cryptoJS from 'crypto-js';
-import { MatSelectionList, MatSelectionListChange, MatSnackBar } from '@angular/material';
+import { MatSelectionList, MatSelectionListChange, MatSnackBar, MatDialog } from '@angular/material';
+import { ShowCandidateComponent } from '../modals/show-candidate/show-candidate.component';
 @Component({
   selector: 'app-election',
   templateUrl: './election.component.html',
@@ -18,11 +19,16 @@ export class ElectionComponent implements OnInit {
   selectedCandidates = [];
   myVotedCandidates;
   myVotedCandidatesMetadata;
+  candidateStanding;
+  dataIsLoaded = false;
+  isVoting = false;
   // tslint:disable-next-line:max-line-length
-  constructor(private activatedRoute: ActivatedRoute, private snackBar: MatSnackBar, private authService: AuthService, private electionService: ElectionService) { }
+  constructor(private activatedRoute: ActivatedRoute, private dialog: MatDialog, private snackBar: MatSnackBar, private authService: AuthService, private electionService: ElectionService) { }
 
   ngOnInit() {
     this.initElection();
+    this.electionService.source.subscribe(res => this.initElection()
+    );
 
   }
 
@@ -40,15 +46,16 @@ export class ElectionComponent implements OnInit {
     const getElection = this.electionService.getElection(election.id);
     const getPosition = this.electionService.getPosition(election.id);
     const myVotes = this.electionService.myVotes(election.id, student.id);
-
-    combineLatest([getElection, getPosition, myVotes]).subscribe(
+    const candidateStanding = this.electionService.candidateStanding(election.id);
+    this.dataIsLoaded = false;
+    combineLatest([getElection, getPosition, myVotes, candidateStanding]).subscribe(
       (res: any) => {
-
+        this.dataIsLoaded = true;
         this.election = res[0].data;
         this.positions = res[1].data;
         this.myVotedCandidatesMetadata = res[2];
         this.myVotedCandidates = this.parseCandidates(this.myVotedCandidatesMetadata.data);
-
+        this.candidateStanding = res[3].data;
         console.log(res);
         console.log(this.myVotedCandidates);
 
@@ -121,14 +128,19 @@ export class ElectionComponent implements OnInit {
 
     console.log(user);
     console.log(candidateIds);
+    this.isVoting = true;
     this.electionService.vote(this.election.id, user.id, candidateIds).subscribe(
       (res: any) => {
+        this.electionService.source.next();
         console.log(res);
-
+        this.isVoting = false;
+        this.snackBar.open('You have successfully voted', 'Okay', {
+          duration: 5000
+        });
       },
       (err) => {
         console.log(err);
-
+        this.isVoting = false;
       }
     );
 
@@ -150,6 +162,17 @@ export class ElectionComponent implements OnInit {
     });
     return sortedCandidates;
 
+  }
+
+  showCandidate(candidate) {
+    this.dialog.open(ShowCandidateComponent, {
+      width: '450px',
+      data: {
+        candidate: candidate,
+        election: this.election
+
+      }
+    });
   }
 
 
