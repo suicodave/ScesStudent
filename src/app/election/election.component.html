@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutAlign="center" f>
-    <div class="layout" fxLayout="column" fxFlex="80" fxFlex.lt-md="95" fxLayoutAlign="center" fxLayoutGap="45px">
+    <div class="layout" fxLayout="column" fxFlex="80" fxFlex.lt-sm="98" fxLayoutAlign="center" fxLayoutGap="45px">
 
         <div fxLayout="column" *ngIf="dataIsLoaded" fxLayoutAlign="space-around" fxLayoutGap="15px">
 
@@ -126,10 +126,12 @@
                                     <div class="candidate-card-wrapper" *ngFor="let position of candidateStanding">
                                         <p>{{position.name}} </p>
                                         <div fxLayout.gt-sm="row wrap" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="15px">
-                                            <mat-card class="candidate-card" *ngFor="let candidate of position.candidates" fxFlex.gt-sm="30">
-                                                <p>
-
-                                                    {{candidate.full_name }}
+                                            <mat-card class="candidate-card" *ngFor="let candidate of position.candidates;index as i" fxFlex.gt-sm="30">
+                                                <p *ngIf="election.is_active">
+                                                    Candidate {{i+1}}
+                                                </p>
+                                                <p *ngIf="election.is_published">
+                                                    {{candidate.full_name}}
                                                 </p>
                                                 <p>
                                                     {{candidate.votes}} Vote(s)

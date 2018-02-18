@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { ElectionService } from '../services/election.service';
@@ -6,6 +6,8 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import * as cryptoJS from 'crypto-js';
 import { MatSelectionList, MatSelectionListChange, MatSnackBar, MatDialog } from '@angular/material';
 import { ShowCandidateComponent } from '../modals/show-candidate/show-candidate.component';
+
+declare var Pusher: any;
 @Component({
   selector: 'app-election',
   templateUrl: './election.component.html',
@@ -22,18 +24,44 @@ export class ElectionComponent implements OnInit {
   candidateStanding;
   dataIsLoaded = false;
   isVoting = false;
+  pusher;
   // tslint:disable-next-line:max-line-length
-  constructor(private activatedRoute: ActivatedRoute, private dialog: MatDialog, private snackBar: MatSnackBar, private authService: AuthService, private electionService: ElectionService) { }
+  constructor(private activatedRoute: ActivatedRoute, private dialog: MatDialog, private snackBar: MatSnackBar, private authService: AuthService, private electionService: ElectionService, private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.initElection();
     this.electionService.source.subscribe(res => this.initElection()
     );
+    this.initPusher();
+    console.log(screen.width);
+
 
   }
 
 
+  initPusher() {
+    this.pusher = new Pusher('4051662bb310056f8c60', {
+      cluster: 'eu',
+      encrypted: true
+    });
 
+    const user = this.authService.getProfile();
+
+    const dep_id = user.department.id;
+    const sy = user.school_year.id;
+    const subscribeTo = `vote${dep_id}sy${sy}`;
+    const channel = this.pusher.subscribe(subscribeTo);
+
+    channel.bind('App\\Events\\Vote', (data) => {
+      this.candidateStanding = data.meta.standing_masked;
+      try {
+
+        this.cd.detectChanges();
+      } catch (err) {
+
+      }
+    });
+  }
 
 
   initElection() {
@@ -46,7 +74,15 @@ export class ElectionComponent implements OnInit {
     const getElection = this.electionService.getElection(election.id);
     const getPosition = this.electionService.getPosition(election.id);
     const myVotes = this.electionService.myVotes(election.id, student.id);
-    const candidateStanding = this.electionService.candidateStanding(election.id);
+
+    let is_masked;
+    if (election.is_active) {
+      is_masked = 1;
+    } else if (election.is_published) {
+      is_masked = 0;
+    }
+
+    const candidateStanding = this.electionService.candidateStanding(election.id, is_masked);
     this.dataIsLoaded = false;
     combineLatest([getElection, getPosition, myVotes, candidateStanding]).subscribe(
       (res: any) => {
@@ -56,8 +92,6 @@ export class ElectionComponent implements OnInit {
         this.myVotedCandidatesMetadata = res[2];
         this.myVotedCandidates = this.parseCandidates(this.myVotedCandidatesMetadata.data);
         this.candidateStanding = res[3].data;
-        console.log(res);
-        console.log(this.myVotedCandidates);
 
 
 
@@ -67,8 +101,6 @@ export class ElectionComponent implements OnInit {
 
 
   onSelectCandidate(event: MatSelectionListChange, position) {
-    // console.log(obj);
-    // console.log(event);
 
     const selectedCandidate = event.option.value;
 
@@ -115,8 +147,6 @@ export class ElectionComponent implements OnInit {
       return 0;
     });
 
-    console.log(this.selectedCandidates);
-
 
 
   }
@@ -124,22 +154,22 @@ export class ElectionComponent implements OnInit {
   confirmVote() {
     const user = this.authService.getProfile();
     const candidateIds = this.selectedCandidates.map(candidate => candidate.id);
-    console.log(this.election);
 
-    console.log(user);
-    console.log(candidateIds);
     this.isVoting = true;
     this.electionService.vote(this.election.id, user.id, candidateIds).subscribe(
       (res: any) => {
         this.electionService.source.next();
-        console.log(res);
         this.isVoting = false;
         this.snackBar.open('You have successfully voted', 'Okay', {
           duration: 5000
         });
       },
       (err) => {
-        console.log(err);
+        if (err.status == 422 && 'externalMessage' in err.error) {
+          this.snackBar.open(err.error.externalMessage, 'Okay', {
+            duration: 5000
+          });
+        }
         this.isVoting = false;
       }
     );

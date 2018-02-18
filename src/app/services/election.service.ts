@@ -68,9 +68,12 @@ export class ElectionService {
     });
   }
 
-  candidateStanding(electionId) {
+  candidateStanding(electionId, is_masked = '1') {
+    const params = new HttpParams()
+      .set('is_masked', is_masked);
     return this.http.get(apiUrl + `elections/${electionId}/standings`, {
-      headers: apiHeaders.append('Authorization', `Bearer ${this.authService.checkToken()}`)
+      headers: apiHeaders.append('Authorization', `Bearer ${this.authService.checkToken()}`),
+      params: params
     });
   }
 
