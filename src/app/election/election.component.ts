@@ -15,7 +15,6 @@ declare var Pusher: any;
 })
 export class ElectionComponent implements OnInit {
 
-  electionId;
   election;
   positions;
   selectedCandidates = [];
@@ -33,14 +32,14 @@ export class ElectionComponent implements OnInit {
     this.electionService.source.subscribe(res => this.initElection()
     );
     this.initPusher();
-    console.log(screen.width);
+
 
 
   }
 
 
   initPusher() {
-    this.pusher = new Pusher('4051662bb310056f8c60', {
+    this.pusher = new Pusher('068cb0ad7d41b29d066e', {
       cluster: 'eu',
       encrypted: true
     });
@@ -52,7 +51,9 @@ export class ElectionComponent implements OnInit {
     const subscribeTo = `vote${dep_id}sy${sy}`;
     const channel = this.pusher.subscribe(subscribeTo);
 
-    channel.bind('App\\Events\\Vote', (data) => {
+    const election = this.getElection();
+    Pusher.logToConsole = true;
+    channel.bind(`vote${election.id}`, (data) => {
       this.candidateStanding = data.meta.standing_masked;
       try {
 
@@ -63,12 +64,16 @@ export class ElectionComponent implements OnInit {
     });
   }
 
+  getElection() {
+    const decodeKey = this.authService.checkToken();
+    const decrypt = cryptoJS.AES.decrypt(localStorage.getItem('election'), decodeKey);
+    return JSON.parse(decrypt.toString(cryptoJS.enc.Utf8));
+  }
+
 
   initElection() {
 
-    const decodeKey = this.authService.checkToken();
-    const decrypt = cryptoJS.AES.decrypt(localStorage.getItem('election'), decodeKey);
-    const election = JSON.parse(decrypt.toString(cryptoJS.enc.Utf8));
+    const election = this.getElection();
     const student = this.authService.getProfile();
 
     const getElection = this.electionService.getElection(election.id);
@@ -92,7 +97,6 @@ export class ElectionComponent implements OnInit {
         this.myVotedCandidatesMetadata = res[2];
         this.myVotedCandidates = this.parseCandidates(this.myVotedCandidatesMetadata.data);
         this.candidateStanding = res[3].data;
-
 
 
       }

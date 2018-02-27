@@ -1,9 +1,16 @@
-<form (ngSubmit)="signIn()" [formGroup]="authForm"  >
-    <mat-form-field>
-      <input type="email" formControlName="email" matInput placeholder="Email" >
-    </mat-form-field>
-    <mat-form-field>
-      <input type="password" formControlName="password" matInput placeholder="Password">
-    </mat-form-field>
-    <button mat-raised-button color="primary" type="submit" >Sign In</button>
-  </form>
+<mat-sidenav-container>
+  <mat-sidenav-content fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="35px">
+    <p>
+      SCES Student
+    </p>
+    <form (ngSubmit)="signIn()" [formGroup]="authForm" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="5px">
+      <mat-form-field>
+        <input type="email" formControlName="email" matInput placeholder="Email">
+      </mat-form-field>
+      <mat-form-field>
+        <input type="password" formControlName="password" matInput placeholder="Password">
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit">Sign In</button>
+    </form>
+  </mat-sidenav-content>
+</mat-sidenav-container>
