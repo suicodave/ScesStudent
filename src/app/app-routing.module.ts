@@ -5,13 +5,14 @@ import { IndexComponent } from './index/index.component';
 import { HomeComponent } from './home/home.component';
 import { PublishedElectionComponent } from './published-election/published-election.component';
 import { ElectionComponent } from './election/election.component';
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   {
     path: 'auth', component: AuthComponent
   },
   {
-    path: '', component: IndexComponent, children: [
+    path: '', component: IndexComponent, canActivateChild: [AuthGuard], children: [
       {
         path: '', redirectTo: 'home', pathMatch: 'full'
       },

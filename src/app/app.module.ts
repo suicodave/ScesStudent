@@ -19,6 +19,7 @@ import { ElectionComponent } from './election/election.component';
 import { AuthService } from './services/auth.service';
 import { ElectionService } from './services/election.service';
 import { ShowCandidateComponent } from './modals/show-candidate/show-candidate.component';
+import { AuthGuard } from './guards/auth.guard';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,7 @@ import { ShowCandidateComponent } from './modals/show-candidate/show-candidate.c
   entryComponents: [
     ShowCandidateComponent
   ],
-  providers: [AuthService, ElectionService],
+  providers: [AuthService, ElectionService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
