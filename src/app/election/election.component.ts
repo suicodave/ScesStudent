@@ -39,7 +39,7 @@ export class ElectionComponent implements OnInit {
 
 
   initPusher() {
-    this.pusher = new Pusher('068cb0ad7d41b29d066e', {
+    this.pusher = new Pusher('4051662bb310056f8c60', {
       cluster: 'eu',
       encrypted: true
     });
