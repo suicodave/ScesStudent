@@ -1,7 +1,7 @@
 import { HttpHeaders } from '@angular/common/http';
 
 
-export const apiUrl = 'https://localhost:8000/api/';
+export const apiUrl = 'http://127.0.0.1:8000/api/';
 
 export const apiHeaders = new HttpHeaders({
     'X-Requested-With': 'XMLHttpRequest',
