@@ -6,6 +6,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import * as cryptoJS from 'crypto-js';
 import { MatSelectionList, MatSelectionListChange, MatSnackBar, MatDialog } from '@angular/material';
 import { ShowCandidateComponent } from '../modals/show-candidate/show-candidate.component';
+import { pusherKey } from '../interfaces/global';
 
 declare var Pusher: any;
 @Component({
@@ -39,7 +40,7 @@ export class ElectionComponent implements OnInit {
 
 
   initPusher() {
-    this.pusher = new Pusher('4051662bb310056f8c60', {
+    this.pusher = new Pusher(pusherKey, {
       cluster: 'eu',
       encrypted: true
     });
