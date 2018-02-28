@@ -8,3 +8,5 @@ export const apiHeaders = new HttpHeaders({
     'Content-Type': 'application/json',
     'Accept': 'application/json'
 });
+
+export const pusherKey = '4051662bb310056f8c60';
