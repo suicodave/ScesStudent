@@ -23,7 +23,6 @@ export class IndexComponent implements OnInit {
 
   ngOnInit() {
     this.user = this.authService.getProfile();
-    console.log(this.user);
 
 
 

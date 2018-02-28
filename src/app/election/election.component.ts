@@ -52,7 +52,6 @@ export class ElectionComponent implements OnInit {
     const channel = this.pusher.subscribe(subscribeTo);
 
     const election = this.getElection();
-    Pusher.logToConsole = true;
     channel.bind(`vote${election.id}`, (data) => {
       this.candidateStanding = data.meta.standing_masked;
       try {

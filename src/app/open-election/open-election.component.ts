@@ -26,7 +26,6 @@ export class OpenElectionComponent implements OnInit {
   getOpenElections() {
     this.isLoaded = false;
     const user = this.authService.getProfile();
-    console.log(user);
     this.electionService.getOpenElection(user.school_year.id, user.department.id).subscribe(
       (res: any) => {
 

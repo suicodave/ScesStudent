@@ -59,7 +59,6 @@ export class AuthComponent implements OnInit {
 
     if (token != false) {
       this.router.navigate(['']);
-      console.log('redirected');
 
     }
 

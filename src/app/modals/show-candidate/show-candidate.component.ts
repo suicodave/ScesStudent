@@ -16,7 +16,6 @@ export class ShowCandidateComponent implements OnInit {
     this.candidate = this.data.candidate;
     this.election = this.data.election;
     this.profile = this.candidate.student_profile;
-    console.log(this.candidate);
 
   }
 
