@@ -3,7 +3,7 @@
     <p>
       SCES Student
     </p>
-    <form (ngSubmit)="signIn()" [formGroup]="authForm" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="5px">
+    <form *ngIf="!isLogging" (ngSubmit)="signIn()" [formGroup]="authForm" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="5px">
       <mat-form-field>
         <input type="email" formControlName="email" matInput placeholder="Email">
       </mat-form-field>
@@ -12,5 +12,10 @@
       </mat-form-field>
       <button mat-raised-button color="primary" type="submit">Sign In</button>
     </form>
+    <div fxLayout="column" *ngIf="isLogging" fxLayoutAlign="center center" fxLayoutGap="15px">
+      <mat-spinner diameter="35" strokeWidth="4" ></mat-spinner>
+      <p>Signing In...</p>
+    </div>
+
   </mat-sidenav-content>
 </mat-sidenav-container>

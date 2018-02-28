@@ -10,7 +10,7 @@ import * as cryptoJS from 'crypto-js';
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
-
+  isLogging = false;
   authForm: FormGroup;
   redirectTo = '';
   // tslint:disable-next-line:max-line-length
@@ -32,6 +32,7 @@ export class AuthComponent implements OnInit {
     if (this.authForm.invalid) {
       return;
     }
+    this.isLogging = true;
     const email = this.authForm.value.email;
     const pass = this.authForm.value.password;
 
@@ -47,6 +48,7 @@ export class AuthComponent implements OnInit {
         this.snackbar.open(err.error.message, 'Okay', {
           duration: 5000
         });
+        this.isLogging = false;
 
       }
     );
