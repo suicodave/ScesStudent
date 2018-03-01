@@ -17,6 +17,7 @@ declare var Pusher: any;
 export class ElectionComponent implements OnInit {
 
   election;
+  user;
   positions;
   selectedCandidates = [];
   myVotedCandidates;
@@ -29,6 +30,7 @@ export class ElectionComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute, private dialog: MatDialog, private snackBar: MatSnackBar, private authService: AuthService, private electionService: ElectionService, private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
+    this.user = this.authService.getProfile();
     this.initElection();
     this.electionService.source.subscribe(res => this.initElection()
     );

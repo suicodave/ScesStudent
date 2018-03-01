@@ -55,20 +55,41 @@
                                         <mat-step label="Select Candidates" editable="true" [completed]="selectedCandidates.length != 0">
                                             <div class="selection-list">
                                                 <mat-selection-list #candidates (selectionChange)="onSelectCandidate($event,position)" *ngFor="let position of positions; last as isLast ">
-                                                    <p>{{position.name}} (Choose {{position.number_of_winners}}) </p>
-                                                    <mat-list-option [value]="candidate" *ngFor="let candidate of position.candidates.data">
-                                                        <span>
-                                                            {{ candidate.student_profile.first_name }} {{ candidate.student_profile.middle_name }} {{ candidate.student_profile.last_name
-                                                            }}
-                                                        </span>
-                                                        <span matLine>
-                                                            {{candidate.partylist?.name}}
-                                                        </span>
+                                                    <div *ngIf="position.is_colrep; else notColRepBlock ">
+                                                        <div *ngIf="position.college_id == user.college.id ">
+                                                            <p>{{position.name}} (Choose {{position.number_of_winners}}) </p>
+                                                            <mat-list-option [value]="candidate" *ngFor="let candidate of position.candidates.data">
+                                                                <span>
+                                                                    {{ candidate.student_profile.first_name }} {{ candidate.student_profile.middle_name }} {{ candidate.student_profile.last_name
+                                                                    }}
+                                                                </span>
+                                                                <span matLine>
+                                                                    {{candidate.partylist?.name}}
+                                                                </span>
 
 
-                                                    </mat-list-option>
-                                                    <br>
-                                                    <mat-divider *ngIf="!isLast"></mat-divider>
+                                                            </mat-list-option>
+                                                            <br>
+                                                            <mat-divider *ngIf="!isLast"></mat-divider>
+                                                        </div>
+                                                    </div>
+                                                    <ng-template #notColRepBlock>
+                                                        <p>{{position.name}} (Choose {{position.number_of_winners}}) </p>
+                                                        <mat-list-option [value]="candidate" *ngFor="let candidate of position.candidates.data">
+                                                            <span>
+                                                                {{ candidate.student_profile.first_name }} {{ candidate.student_profile.middle_name }} {{ candidate.student_profile.last_name
+                                                                }}
+                                                            </span>
+                                                            <span matLine>
+                                                                {{candidate.partylist?.name}}
+                                                            </span>
+
+
+                                                        </mat-list-option>
+                                                        <br>
+                                                        <mat-divider *ngIf="!isLast"></mat-divider>
+                                                    </ng-template>
+
                                                 </mat-selection-list>
 
                                             </div>
