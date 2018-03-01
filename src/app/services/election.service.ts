@@ -51,12 +51,11 @@ export class ElectionService {
 
   vote(electionId, studentId, candidateId: Array<any>) {
     const body = {
-      'election_id': electionId,
       'student_id': studentId,
       'candidate_id': candidateId
     };
 
-    return this.http.post(apiUrl + `elections/vote`, body, {
+    return this.http.post(apiUrl + `elections/${electionId}/vote`, body, {
       headers: apiHeaders.append('Authorization', `Bearer ${this.authService.checkToken()}`)
     });
   }
